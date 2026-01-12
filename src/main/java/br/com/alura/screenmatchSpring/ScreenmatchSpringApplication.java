@@ -15,7 +15,7 @@ public class ScreenmatchSpringApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         ConsumoAPI api = new ConsumoAPI();
-        var json = api.obterDados("https://www.omdbapi.com/?t=gilmore+girls&Season=1&apikey=6585022c");
+        var json = api.obterDados("https://www.omdbapi.com/?t=gilmore+girls&apikey=6585022c");
         System.out.println(json);
     }
 }
