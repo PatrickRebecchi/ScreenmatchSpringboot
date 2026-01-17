@@ -1,7 +1,9 @@
 package br.com.alura.screenmatchSpring.model;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Locale;
 
 public class Episodio {
 
@@ -58,15 +60,18 @@ public class Episodio {
     }
     private LocalDate dataLancamento;
 
+    DateTimeFormatter formatter =
+            DateTimeFormatter.ofPattern("dd 'de' MMMM 'de' yyyy",
+                    new Locale("pt", "BR"));
 
     @Override
     public String toString() {
 
-        return  "temporada=" + temporada +
-                ", titulo='" + titulo + '\'' +
-                ", numeroEpisodio=" + numeroEpisodio +
-                ", avaliacao=" + avaliacao +
-                ", dataLancamento=" + dataLancamento;
+        return  "temporada= " + temporada +
+                ", titulo= " + titulo + '\'' +
+                ", numeroEpisodio= " + numeroEpisodio +
+                ", avaliacao= " + avaliacao +
+                ", dataLancamento= " + dataLancamento.format(formatter);
 
     }
 }
