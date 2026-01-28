@@ -9,7 +9,7 @@ import java.util.List;
 
 public class ConsultaChatGPT {
     public static String obterTraducao(String texto) {
-        OpenAiService service = "apikey esta no whats ";
+        OpenAiService service = new OpenAiService("");
 
         ChatCompletionRequest request = ChatCompletionRequest.builder()
                 .model("gpt-4o-mini")
