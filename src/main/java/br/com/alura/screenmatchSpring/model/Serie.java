@@ -1,6 +1,7 @@
 package br.com.alura.screenmatchSpring.model;
 
 import br.com.alura.screenmatchSpring.service.ConsultaChatGPT;
+import br.com.alura.screenmatchSpring.service.ConsultaGemini;
 
 import java.util.OptionalDouble;
 
@@ -76,7 +77,8 @@ public class Serie {
         this.genero = Categoria.fromString(dadosSerie.genero().split(",")[0].trim());
         this.atores = dadosSerie.atores();
         this.poster = dadosSerie.poster();
-        this.sinopse = ConsultaChatGPT.obterTraducao(dadosSerie.sinopse()).trim();
+        this.sinopse = ConsultaChatGPT
+                .obterTraducao(dadosSerie.sinopse()).trim();
     }
 
     @Override
