@@ -1,8 +1,10 @@
 package br.com.alura.screenmatchSpring.principal;
 
 import br.com.alura.screenmatchSpring.model.*;
+import br.com.alura.screenmatchSpring.repository.SerieRepository;
 import br.com.alura.screenmatchSpring.service.ConsumoAPI;
 import br.com.alura.screenmatchSpring.service.ConverteDados;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -17,6 +19,12 @@ public class Principal {
 
     private final String ENDERECO = "https://www.omdbapi.com/?t=";
     private final String API_KEY = "&apikey=6585022c";
+
+    private SerieRepository repositorio;
+
+    public Principal(SerieRepository repositorio) {
+        this.repositorio = repositorio;
+    }
 
     public void exibirMenu() {
         while (true) {
@@ -130,6 +138,7 @@ public class Principal {
 
     private List<DadosSerie> dadosSeries = new ArrayList<>();
 
+
     public void exibeMenu() {
         //var opcao = leitura.nextInt();
         var opcao = -1;
@@ -174,7 +183,9 @@ public class Principal {
 
     private void buscarSerieWeb() {
         DadosSerie dados = getDadosSerie();
-        dadosSeries.add(dados);
+        Serie serie = new Serie(dados);
+//        dadosSeries.add(dados);
+        repositorio.save(serie);  // codigo para slv os dados no banco de dados
         System.out.println(dados);
     }
 
