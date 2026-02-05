@@ -2,17 +2,46 @@ package br.com.alura.screenmatchSpring.model;
 
 import br.com.alura.screenmatchSpring.service.ConsultaChatGPT;
 import br.com.alura.screenmatchSpring.service.ConsultaGemini;
+import jakarta.persistence.*;
+import org.hibernate.annotations.AnyDiscriminatorImplicitValues;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.OptionalDouble;
-
+@Entity
+@Table(name = "series")
 public class Serie {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column (unique = true)
     private String titulo;
     private Integer totalTemporadas;
     private Double avaliacao;
+    @Enumerated(EnumType.STRING)
     private Categoria genero;
     private String atores;
     private String poster;
     private String sinopse;
+    public Serie() {
+    }
+
+    @Transient
+    private List<Episodio> episodios = new ArrayList<>();
+    public List<Episodio> getEpisodios() {
+        return episodios;
+    }
+    public void setEpisodios(List<Episodio> episodios) {
+        this.episodios = episodios;
+    }
+
+
+    public Long getId() {
+        return id;
+    }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getTitulo() {
         return titulo;
