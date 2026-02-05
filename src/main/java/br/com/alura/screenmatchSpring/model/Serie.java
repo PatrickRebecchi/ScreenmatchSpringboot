@@ -77,7 +77,7 @@ public class Serie {
         this.genero = Categoria.fromString(dadosSerie.genero().split(",")[0].trim());
         this.atores = dadosSerie.atores();
         this.poster = dadosSerie.poster();
-        this.sinopse = ConsultaChatGPT
+        this.sinopse = ConsultaGemini // ou ConsultaChatGPT  ( Estou sem tokens do gpt por isso uso o Gemini )
                 .obterTraducao(dadosSerie.sinopse()).trim();
     }
 

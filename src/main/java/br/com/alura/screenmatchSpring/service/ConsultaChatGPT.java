@@ -10,7 +10,7 @@ public class ConsultaChatGPT {
         ChatLanguageModel chatGPT = OpenAiChatModel.builder()
                 .apiKey(System.getenv("OPENAI_API_KEY"))
                 //.modelName("gpt-4o-mini")
-                .modelName("text-davinci-003")
+                .modelName("gpt-5.2")
                 .temperature(0.0)
                 .build();
 

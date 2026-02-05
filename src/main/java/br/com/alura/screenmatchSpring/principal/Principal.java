@@ -134,34 +134,41 @@ public class Principal {
         //var opcao = leitura.nextInt();
         var opcao = -1;
 
-        while (opcao != 0) {
-            var menu = """
-                    1 - Buscar séries
-                    2 - Buscar episódios
-                    3 - Listar series buscada
-                    0 - Sair                                 
-                    """;
+        try {
 
-            System.out.println(menu);
-            opcao = leitura.nextInt();
-            leitura.nextLine();
 
-            switch (opcao) {
-                case 1:
-                    buscarSerieWeb();
-                    break;
-                case 2:
-                    buscarEpisodioPorSerie();
-                    break;
-                case 3:
-                    listarSerieBuscada();
-                    break;
-                case 0:
-                    System.out.println("Saindo...");
-                    break;
-                default:
-                    System.out.println("Opção inválida");
+            while (opcao != 0) {
+                var menu = """
+                         1 - Buscar séries
+                         2 - Buscar episódios
+                         3 - Listar series buscada
+                         0 - Sair                                \s
+                        \s""";
+
+                System.out.println(menu);
+                opcao = leitura.nextInt();
+                leitura.nextLine();
+
+                switch (opcao) {
+                    case 1:
+                        buscarSerieWeb();
+                        break;
+                    case 2:
+                        buscarEpisodioPorSerie();
+                        break;
+                    case 3:
+                        listarSerieBuscada();
+                        break;
+                    case 0:
+                        System.out.println("Saindo...");
+                        break;
+                    default:
+                        System.out.println("Opção inválida");
+                }
             }
+        }catch (InputMismatchException e) {
+            System.out.println("Valor inválido. Digite um número.");
+            leitura.nextLine(); // LIMPA o valor inválido
         }
     }
 
