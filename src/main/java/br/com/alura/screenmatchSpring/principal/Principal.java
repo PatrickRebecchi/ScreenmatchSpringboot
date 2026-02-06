@@ -150,7 +150,7 @@ public class Principal {
                 var menu = """
                          1 - Buscar séries
                          2 - Buscar episódios
-                         3 - Listar series buscada
+                         3 - Listar series do banco de dados
                          0 - Sair                                \s
                         \s""";
 
@@ -244,10 +244,13 @@ public class Principal {
     }
 
     private void listarSerieBuscada(){
-        List<Serie> series = new ArrayList<>();
-        series = dadosSeries.stream()
-                        .map(d-> new Serie(d))
-                                .collect(Collectors.toList());
+//        List<Serie> series = new ArrayList<>();
+//        series = dadosSeries.stream()
+//                        .map(d-> new Serie(d))
+//                                .collect(Collectors.toList());  Aqui eu posso subistituir esse codigo por um findAll()
+
+        List<Serie> series = repositorio.findAll(); // Consigo puxar a lista do banco de dados
+
         series.stream()
                 .sorted(Comparator.comparing(Serie::getGenero))
                 .forEach(System.out::println);
