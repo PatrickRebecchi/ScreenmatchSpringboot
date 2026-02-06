@@ -26,7 +26,7 @@ public class Serie {
     public Serie() {
     }
 
-    @Transient
+    @OneToMany(mappedBy = "serie")
     private List<Episodio> episodios = new ArrayList<>();
     public List<Episodio> getEpisodios() {
         return episodios;

@@ -22,6 +22,8 @@ public class Principal {
 
     private SerieRepository repositorio;
 
+    private List<Serie> series = new ArrayList<>();
+
     public Principal(SerieRepository repositorio) {
         this.repositorio = repositorio;
     }
@@ -67,18 +69,6 @@ public class Principal {
             List<DadosEpisodio> dadosEpisodios = temporadas.stream()
                     .flatMap(t -> t.episodios().stream())
                     .collect(Collectors.toList());
-//            System.out.println("\nTop 10 episódios");
-//            dadosEpisodios.stream()
-//                    .filter(e -> !e.avaliacao().equalsIgnoreCase("N/A"))
-//                    .peek(e -> System.out.println("Primeiro filtro(N/A) " + e))
-//                    .sorted(Comparator.comparing(DadosEpisodio::avaliacao).reversed())
-//                    .peek(e -> System.out.println("Ordenação " + e))
-//                    .limit(10)
-//                    .peek(e -> System.out.println("Limite " + e))
-//                    .map(e -> e.titulo().toUpperCase())
-//                    .peek(e -> System.out.println("Mapeamento " + e))
-//                    .forEach(System.out::println);
-//
             List<Episodio> episodios = temporadas.stream()
                     .flatMap(t -> t.episodios().stream().map(d -> new Episodio(t.numero(), d))
                     )
@@ -86,35 +76,6 @@ public class Principal {
 
             episodios.forEach(System.out::println);
 
-//            System.out.println("A partir de que ano você deseja ver os episódios? ");
-//            var ano = leitura.nextInt();
-//            leitura.nextLine();
-//
-//            LocalDate dataBusca = LocalDate.of(ano, 1, 1);
-//
-//            DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-//
-//            episodios.stream()
-//                    .filter(e -> e.getDataLancamento() != null && e.getDataLancamento().isAfter(dataBusca))
-//                    .forEach(e -> System.out.println(
-//                            "Temporada:  " + e.getTemporada() +
-//                                    " Episódio: " + e.getTitulo() +
-//                                    " Data lançamento: " + e.getDataLancamento().format(formatador)
-//                    ));
-//
-//
-//            System.out.println("Digite um trcho do titulo para buscar o episódio. ");
-//
-//            var trechoDoTitulo = leitura.nextLine();
-//            Optional<Episodio> episodiobuscado = episodios.stream()
-//                    .filter(e -> e.getTitulo().toUpperCase().contains(trechoDoTitulo.toUpperCase()))
-//                    .findFirst();
-//                    if (episodiobuscado.isPresent()){
-//                        System.out.println("Episódio encontrado");
-//                        System.out.println("Temporada: " + episodiobuscado.get());
-//                    }else{
-//                        System.out.println("Episódio não encontrado!");
-//                    }
 
             Map<Integer, Double> avaliacaoDeTemporada = episodios.stream()
                     .filter(e -> e.getAvaliacao() > 0.0)
@@ -198,49 +159,35 @@ public class Principal {
     }
 
     private void buscarEpisodioPorSerie() {
-        DadosSerie dadosSerie = getDadosSerie();
+        listarSerieBuscada();
+        System.out.println("Escolha uma série pelo nome: ");
+        var nomeSerie = leitura.nextLine();
 
-        List<DadosTemporada> temporadas = new ArrayList<>();
+        Optional<Serie> serie = series.stream()
+                .filter(s -> s.getTitulo().toLowerCase().contains(nomeSerie.toLowerCase()))
+                .findFirst();
 
-        for (int i = 1; i <= dadosSerie.totalTemporadas(); i++) {
-            var json = consumo.obterDados(
-                    ENDERECO + dadosSerie.titulo().replace(" ", "+")
-                            + "&season=" + i + API_KEY
-            );
-            DadosTemporada dadosTemporada =
-                    conversor.obterDados(json, DadosTemporada.class);
-            temporadas.add(dadosTemporada);
+        if (serie.isPresent()) {
+            var serieEncontrada = serie.get();
+            List<DadosTemporada> temporadas = new ArrayList<>();
+
+            for (int i = 1; i <= serieEncontrada.getTotalTemporadas(); i++) {
+                var json = consumo.obterDados(ENDERECO + serieEncontrada.getTitulo().replace(" ", "+") + "&season=" + i + API_KEY);
+                DadosTemporada dadosTemporada = conversor.obterDados(json, DadosTemporada.class);
+                temporadas.add(dadosTemporada);
+            }
+            temporadas.forEach(System.out::println);
+
+            List<Episodio> episodios = temporadas.stream()
+                    .flatMap(d -> d.episodios().stream()
+                            .map(e -> new Episodio(d.numero(), e)))
+                    .collect(Collectors.toList());
+
+            serieEncontrada.setEpisodios(episodios);
+            repositorio.save(serieEncontrada);
+        }else {
+            System.out.println("Série não encontrada!");
         }
-
-        // Converte para Episodio (igual você já fazia)
-        List<Episodio> episodios = temporadas.stream()
-                .flatMap(t -> t.episodios()
-                        .stream()
-                        .map(d -> new Episodio(t.numero(), d)))
-                .toList();
-
-        episodios.forEach(System.out::println);
-
-        // Média por temporada
-        Map<Integer, Double> avaliacaoPorTemporada = episodios.stream()
-                .filter(e -> e.getAvaliacao() > 0.0)
-                .collect(Collectors.groupingBy(
-                        Episodio::getTemporada,
-                        Collectors.averagingDouble(Episodio::getAvaliacao)
-                ));
-
-        System.out.println("Avaliação por temporada: " + avaliacaoPorTemporada);
-
-        // Estatísticas gerais
-        DoubleSummaryStatistics stats = episodios.stream()
-                .filter(e -> e.getAvaliacao() > 0.0)
-                .collect(Collectors.summarizingDouble(Episodio::getAvaliacao));
-
-        System.out.println("Dados da série: " + dadosSerie.titulo());
-        System.out.println("Média: " + stats.getAverage());
-        System.out.println("Melhor episódio: " + stats.getMax());
-        System.out.println("Pior episódio: " + stats.getMin());
-        System.out.println("Total de episódios avaliados: " + stats.getCount());
     }
 
     private void listarSerieBuscada(){
@@ -248,9 +195,7 @@ public class Principal {
 //        series = dadosSeries.stream()
 //                        .map(d-> new Serie(d))
 //                                .collect(Collectors.toList());  Aqui eu posso subistituir esse codigo por um findAll()
-
-        List<Serie> series = repositorio.findAll(); // Consigo puxar a lista do banco de dados
-
+        series = repositorio.findAll(); // Consigo puxar a lista do banco de dados
         series.stream()
                 .sorted(Comparator.comparing(Serie::getGenero))
                 .forEach(System.out::println);

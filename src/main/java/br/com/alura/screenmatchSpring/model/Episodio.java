@@ -1,11 +1,30 @@
 package br.com.alura.screenmatchSpring.model;
 
+import jakarta.persistence.*;
+import org.hibernate.annotations.ManyToAny;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.Locale;
 
+@Entity
+@Table(name = "episodios")
 public class Episodio {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private Integer temporada;
+    private String titulo;
+    private Integer numeroEpisodio;
+    private Double avaliacao;
+    public Episodio(){}
+
+
+
+    @ManyToOne
+    @JoinColumn(name = "serie_id")
+    private Serie serie;
 
     public Episodio(Integer numeroTemporarda, DadosEpisodio dadosEpisodio) {
         this.temporada = numeroTemporarda;
@@ -23,10 +42,22 @@ public class Episodio {
         }
     }
 
-    private Integer temporada;
-    private String titulo;
-    private Integer numeroEpisodio;
-    private Double avaliacao;
+
+    public Serie getSerie() {
+        return serie;
+    }
+
+    public void setSerie(Serie serie) {
+        this.serie = serie;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public Integer getTemporada() {
         return temporada;
