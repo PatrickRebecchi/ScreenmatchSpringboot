@@ -114,7 +114,8 @@ public class Principal {
                          4 - Buscar serie por titulo
                          5 - Buscar serie por Id
                          6 - Buscar todas séries de um ator/atriz
-                         7 - Buscar por Genero
+                         7 - Buscar por genero
+                         8 - Top 5 Séries
                          0 - Sair                                \s
                         \s""";
 
@@ -143,6 +144,9 @@ public class Principal {
                         break;
                     case 7:
                         buscarSerieCategoria();
+                        break;
+                    case 8:
+                        buscarTop5Series();
                         break;
                     case 0:
                         System.out.println("Saindo...");
@@ -279,9 +283,24 @@ public class Principal {
     }
 
     private void buscarSerieCategoria() {
+        System.out.println("Qual genero você gostaria de buscar? ");
+        var generoEscolhido = leitura.nextLine();
+        Categoria categoria = Categoria.valueOf(generoEscolhido.toUpperCase());
+        List<Serie> seriesEncontrada = repositorio.findByGenero(categoria);
+            if (seriesEncontrada.isEmpty()){
+                System.out.println("Série não encontrada.");
+            }else {
+                seriesEncontrada.forEach(serie -> System.out.println("Dados da série: " + serie ));
+            }
 
     }
 
+    private void buscarTop5Series() {
+        System.out.println("Top 5 Séries!!! ");
+        List<Serie> serieTop = repositorio.findTop5ByOrderByAvaliacaoDesc();
+        serieTop.forEach(s -> System.out.println(s.getTitulo() + ", Avaliação: " + s.getAvaliacao()));
+
+    }
 
 }
 

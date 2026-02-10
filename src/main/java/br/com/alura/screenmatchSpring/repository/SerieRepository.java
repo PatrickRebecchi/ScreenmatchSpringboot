@@ -1,5 +1,6 @@
 package br.com.alura.screenmatchSpring.repository;
 
+import br.com.alura.screenmatchSpring.model.Categoria;
 import br.com.alura.screenmatchSpring.model.Serie;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -14,6 +15,9 @@ public interface SerieRepository extends JpaRepository<Serie, Long> {
 
     List<Serie> findByAtoresContainingIgnoreCaseAndAvaliacaoGreaterThanEqual(String nomeAtor, double avaliacao);
 
+    List<Serie> findByGenero(Categoria genero);
+
+    List<Serie> findTop5ByOrderByAvaliacaoDesc();
 
 //    List<Serie> findByAtoresContainingIgnoreCase(String nomeDosAtores);
 //    Optional<Serie> findByAtoresContainingIgnoreCase(String nomeAtores);
