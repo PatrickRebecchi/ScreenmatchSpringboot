@@ -114,6 +114,7 @@ public class Principal {
                          4 - Buscar serie por titulo
                          5 - Buscar serie por Id
                          6 - Buscar todas séries de um ator/atriz
+                         7 - Buscar por Genero
                          0 - Sair                                \s
                         \s""";
 
@@ -155,7 +156,6 @@ public class Principal {
             leitura.nextLine(); // LIMPA o valor inválido
         }
     }
-
 
 
     private void buscarSerieWeb() {
@@ -277,6 +277,11 @@ public class Principal {
             seriesEncontrada.forEach(s -> System.out.println(s.getTitulo() + ", Avaliação: " + s.getAvaliacao()));
         }
     }
+
+    private void buscarSerieCategoria() {
+
+    }
+
 
 }
 
