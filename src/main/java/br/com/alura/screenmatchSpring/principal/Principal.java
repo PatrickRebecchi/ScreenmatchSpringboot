@@ -116,6 +116,8 @@ public class Principal {
                          6 - Buscar todas séries de um ator/atriz
                          7 - Buscar por genero
                          8 - Top 5 Séries
+                         9 - Buscar série por numero de temporada e avaliação
+                        
                          0 - Sair                                \s
                         \s""";
 
@@ -143,10 +145,13 @@ public class Principal {
                         buscarSeriesAtores();
                         break;
                     case 7:
-                        buscarSerieCategoria();
+                        buscarSeriePorCategoria();
                         break;
                     case 8:
                         buscarTop5Series();
+                        break;
+                    case 9:
+                        filtrarSeriesPorTemporadaEAvaliacao();
                         break;
                     case 0:
                         System.out.println("Saindo...");
@@ -160,6 +165,8 @@ public class Principal {
             leitura.nextLine(); // LIMPA o valor inválido
         }
     }
+
+
 
 
     private void buscarSerieWeb() {
@@ -282,8 +289,8 @@ public class Principal {
         }
     }
 
-    private void buscarSerieCategoria() {
-        System.out.println("Qual genero você gostaria de buscar? ");
+    private void buscarSeriePorCategoria() {
+        System.out.println("Deseja buscar séries de qual categoria/gênero? ");
         var generoEscolhido = leitura.nextLine();
         Categoria categoria = Categoria.valueOf(generoEscolhido.toUpperCase());
         List<Serie> seriesEncontrada = repositorio.findByGenero(categoria);
@@ -299,6 +306,25 @@ public class Principal {
         System.out.println("Top 5 Séries!!! ");
         List<Serie> serieTop = repositorio.findTop5ByOrderByAvaliacaoDesc();
         serieTop.forEach(s -> System.out.println(s.getTitulo() + ", Avaliação: " + s.getAvaliacao()));
+
+    }
+
+    private void filtrarSeriesPorTemporadaEAvaliacao() {
+        System.out.println("Digite o numero máximo de temporada: ");
+        var totalDeTemporada = leitura.nextInt();
+        System.out.println("Avaliações a partir de qual valor? ");
+        var avalicao = leitura.nextDouble();
+
+        List<Serie> seriesEncontrada = repositorio
+                .findByTotalTemporadasLessThanEqualAndAvaliacaoGreaterThanEqual(totalDeTemporada, avalicao);
+        if (seriesEncontrada.isEmpty()){
+            System.out.println("Série não encontrada! ");
+        }else {
+            System.out.println("*** Séries filtradas ***");
+            System.out.println("Séries com o total de temporada igual a " + totalDeTemporada);
+            seriesEncontrada.forEach(s ->
+                    System.out.println(s.getTitulo() + " - avaliação " + s.getAvaliacao()));
+        }
 
     }
 
