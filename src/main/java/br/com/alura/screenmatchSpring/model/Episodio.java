@@ -98,8 +98,10 @@ public class Episodio {
                 : "Data não disponível";
 
         return "Episodio{" +
-                "titulo='" + titulo + '\'' +
-                ", dataLancamento= " + dataFormatada +
+                "titulo ='" + titulo + '\'' +
+                //"Série ='" + getSerie() + '\'' +
+                //"temporada ='" + getTemporada() + '\'' +
+                ", dataLancamento = " + dataFormatada +
                 '}';
     }
 }

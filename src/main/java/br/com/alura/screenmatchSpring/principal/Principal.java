@@ -117,6 +117,7 @@ public class Principal {
                          7 - Buscar por genero
                          8 - Top 5 Séries
                          9 - Buscar série por numero de temporada e avaliação
+                         10 - Buscar episódio por trecho do titulo
                         
                          0 - Sair                                \s
                         \s""";
@@ -153,6 +154,9 @@ public class Principal {
                     case 9:
                         filtrarSeriesPorTemporadaEAvaliacao();
                         break;
+                    case 10:
+                        buscarEpisodioPorTrecho();
+                        break;
                     case 0:
                         System.out.println("Saindo...");
                         break;
@@ -165,8 +169,6 @@ public class Principal {
             leitura.nextLine(); // LIMPA o valor inválido
         }
     }
-
-
 
 
     private void buscarSerieWeb() {
@@ -256,7 +258,8 @@ public class Principal {
         System.out.println("Escolha uma série pelo Id: ");
         var idSerie = leitura.nextInt();
 
-         repositorio.findById(idSerie)
+//         repositorio.findById(idSerie)
+            repositorio.buscarPorId(idSerie)
                 .ifPresentOrElse(
                         serie -> System.out.println("Dados da série: " + serie),
                         () -> System.out.println("Série não encontrada. ")
@@ -315,17 +318,27 @@ public class Principal {
         System.out.println("Avaliações a partir de qual valor? ");
         var avalicao = leitura.nextDouble();
 
-        List<Serie> seriesEncontrada = repositorio
-                .findByTotalTemporadasLessThanEqualAndAvaliacaoGreaterThanEqual(totalDeTemporada, avalicao);
+//        List<Serie> seriesEncontrada = repositorio
+//                .findByTotalTemporadasLessThanEqualAndAvaliacaoGreaterThanEqual(totalDeTemporada, avalicao);
+        List<Serie> seriesEncontrada = repositorio.seriesPorTemporadaEAvaliacao(totalDeTemporada, avalicao);
         if (seriesEncontrada.isEmpty()){
             System.out.println("Série não encontrada! ");
         }else {
             System.out.println("*** Séries filtradas ***");
-            System.out.println("Séries com o total de temporada igual a " + totalDeTemporada);
+            //System.out.println("Séries com o total de temporada igual a " + totalDeTemporada);
             seriesEncontrada.forEach(s ->
-                    System.out.println(s.getTitulo() + " - avaliação " + s.getAvaliacao()));
+                    System.out.println(s.getTitulo() + " - total de temporada: " +s.getTotalTemporadas() + " - avaliação " + s.getAvaliacao()));
         }
 
+    }
+
+    private void buscarEpisodioPorTrecho() {
+        System.out.println("Qual o do episódio para a buscar? ");
+        var trechoEpisodio = leitura.nextLine();
+        List<Episodio> episodiosEncontrado = repositorio.episodiosPorTrecho(trechoEpisodio);
+        episodiosEncontrado.forEach(e -> System.out.printf("Série: %s  - Temporada %s - Episódio %s - %s\n",
+                        e.getSerie().getTitulo(), e.getTemporada(),
+                        e.getNumeroEpisodio(), " Titulo: "+ e.getTitulo()));
     }
 
 }
