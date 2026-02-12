@@ -3,10 +3,12 @@ package br.com.alura.screenmatchSpring.repository;
 import br.com.alura.screenmatchSpring.model.Categoria;
 import br.com.alura.screenmatchSpring.model.Episodio;
 import br.com.alura.screenmatchSpring.model.Serie;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Persistable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import java.awt.print.Pageable;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,14 +18,22 @@ public interface SerieRepository extends JpaRepository<Serie, Long> {
 
     Optional<Serie> findById(int idSerie);
     // usando a JPQL para puxar o id
+
     @Query("select s from Serie s where s.Id = :id")
     Optional<Serie> buscarPorId(int id);
 
     List<Serie> findByAtoresContainingIgnoreCaseAndAvaliacaoGreaterThanEqual(String nomeAtor, double avaliacao);
 
+    @Query("SELECT s FROM Serie s WHERE LOWER(s.atores) LIKE LOWER(CONCAT('%', :nome, '%')) AND s.avaliacao >= :avaliacao")
+   //@Query("SELECT s FROM Serie s WHERE s.atores ILIKE %:nome% AND s.avaliacao >= :avaliacao")
+    List<Serie> fingBuscarPotAtoresEAvaliacao(String nome, double avaliacao);
+
     List<Serie> findByGenero(Categoria genero);
 
     List<Serie> findTop5ByOrderByAvaliacaoDesc();
+
+    @Query("SELECT s FROM Serie s ORDER BY s.avaliacao DESC")
+    List<Serie> Top5Series(Pageable pageble);
 
 
     List<Serie> findByTotalTemporadasLessThanEqualAndAvaliacaoGreaterThanEqual(Integer totalDeTemporada, double avalicao);
@@ -33,4 +43,10 @@ public interface SerieRepository extends JpaRepository<Serie, Long> {
 
     @Query("SELECT e FROM Serie s JOIN s.episodios e WHERE e.titulo ILIKE %:trechoEpisodio%")
     List<Episodio> episodiosPorTrecho(String trechoEpisodio);
+
+    @Query("SELECT e FROM Episodio e ORDER BY e.avaliacao DESC")
+    List<Episodio> Top5Episodios(Pageable pageable);
+
+    @Query("SELECT e FROM Serie s JOIN s.episodios e WHERE s = :serie ORDER BY e.avaliacao DESC")
+    List<Episodio> topEpisodiosPorSerie(Serie serie, Pageable pageable);
 }
