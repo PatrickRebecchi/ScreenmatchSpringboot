@@ -123,6 +123,8 @@ public class Principal {
                          9 - Buscar série por numero de temporada e avaliação
                          10 - Buscar episódio por trecho do titulo
                          11 - Buscar top 5 Episódios
+                         12 - Buscar por top episódios por série
+                         13 - Buscar episódio a partir de uma data
                         
                          0 - Sair                                \s
                         \s""";
@@ -168,6 +170,9 @@ public class Principal {
                     case 12:
                         topEpisodioPorSerie();
                         break;
+                    case 13:
+                        buscarEpisodiosDepoisDeUmaData();
+                        break;
                     case 0:
                         System.out.println("Saindo...");
                         break;
@@ -180,6 +185,7 @@ public class Principal {
             leitura.nextLine(); // LIMPA o valor inválido
         }
     }
+
 
 
     private void buscarSerieWeb() {
@@ -357,7 +363,7 @@ public class Principal {
     private void buscarTop5Episodios() {
 
         List<Episodio> top5Episodios = repositorio.Top5Episodios(PageRequest.of(0,5));
-        System.out.println("**********Top 5 Episódios**************");
+        System.out.println("                                  **********Top 5 Episódios**************");
         top5Episodios.forEach(e -> System.out.printf("Série: %s  - Temporada %s - Episódio %s - Avaliação %s - %s\n",
                 e.getSerie().getTitulo(), e.getTemporada(),
                 e.getNumeroEpisodio(), e.getAvaliacao() ," Titulo: "+ e.getTitulo()));
@@ -368,8 +374,32 @@ public class Principal {
 
         if (serieBusca.isPresent()){
             Serie serie = serieBusca.get();
-            List<Episodio> topEpisodios = repositorio.topEpisodiosPorSerie(serie, PageRequest.of(0,5));
-            topEpisodios.forEach(System.out::println);
+            List<Episodio> topEpisodios = repositorio.findtopEpisodiosPorSerie(serie, PageRequest.of(0,5));
+            System.out.println("                               **********Top 5 Episódios**************");
+            topEpisodios.forEach(e -> System.out.printf("Série: %s  - Temporada %s - Episódio %s - Avaliação %s - %s\n",
+                    e.getSerie().getTitulo(), e.getTemporada(),
+                    e.getNumeroEpisodio(), e.getAvaliacao() ," Titulo: "+ e.getTitulo()));
+        }
+    }
+
+    private void buscarEpisodiosDepoisDeUmaData() {
+        buscarSeriePorTitulo();
+
+        if (serieBusca.isPresent()) {
+            System.out.println("Digite a ano limite de lançamento.");
+            Serie serie = serieBusca.get();
+            var anoLancamento = leitura.nextInt();
+            List<Episodio> episodiosAno = repositorio.findEpisodioPorSerieEAano(serie, anoLancamento);
+            episodiosAno.forEach(e -> System.out.printf(
+                    "Série: %s - Episódio: %s - Temporada %d - Nº %d - Avaliação %.1f%n",
+                    e.getSerie().getTitulo(),
+                    e.getTitulo(),
+                    e.getTemporada(),
+                    e.getNumeroEpisodio(),
+                    e.getAvaliacao()
+            ));
+            //episodiosAno.forEach(System.out::println);
+
         }
     }
 

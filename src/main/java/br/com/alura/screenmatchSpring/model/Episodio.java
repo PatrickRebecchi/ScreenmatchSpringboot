@@ -18,6 +18,7 @@ public class Episodio {
     private String titulo;
     private Integer numeroEpisodio;
     private Double avaliacao;
+    private LocalDate dataLancamento;
     public Episodio(){}
 
 
@@ -89,7 +90,7 @@ public class Episodio {
     public void setDataLancamento(LocalDate dataLancamento) {
         this.dataLancamento = dataLancamento;
     }
-    private LocalDate dataLancamento;
+
 
     @Override
     public String toString() {
