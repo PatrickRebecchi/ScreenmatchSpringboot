@@ -17,19 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootApplication
-public class ScreenmatchSpringApplication implements CommandLineRunner {
+public class ScreenmatchSpringApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(ScreenmatchSpringApplication.class, args);
 	}
-    @Autowired
-    private SerieRepository repositorio;
-
-
-    @Override
-    public void run(String... args) throws Exception {
-        Principal principal = new Principal(repositorio);
-        principal.exibeMenu();
-
-    }
 }
