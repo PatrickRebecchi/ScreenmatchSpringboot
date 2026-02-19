@@ -14,13 +14,17 @@ import java.util.Optional;
 
 public interface SerieRepository extends JpaRepository<Serie, Long> {
 
-    Optional<Serie> findByTituloContainingIgnoreCase(String nomeSerie);
+    List<Serie> findByTituloContainingIgnoreCase(String nomeSerie);
 
-    Optional<Serie> findById(int idSerie);
+    //List<Serie> findById(long idSerie);
     // usando a JPQL para puxar o id
 
-    @Query("select s from Serie s where s.Id = :id")
-    Optional<Serie> buscarPorId(int id);
+    Optional<Serie> findById(long idSerie);
+
+
+    @Query("SELECT s FROM Serie s WHERE s.Id = :id")
+    List<Serie> buscarPorId(int id);
+
 
     List<Serie> findByAtoresContainingIgnoreCaseAndAvaliacaoGreaterThanEqual(String nomeAtor, double avaliacao);
 
@@ -53,4 +57,6 @@ public interface SerieRepository extends JpaRepository<Serie, Long> {
     @Query("SELECT e FROM Serie s JOIN s.episodios e WHERE s= :serie AND YEAR(e.dataLancamento) >= :anoLancamento")
     List<Episodio> findEpisodioPorSerieEAano(Serie serie, int anoLancamento);
 
+    @Query("SELECT s FROM Serie s JOIN s.episodios e GROUP BY s ORDER BY MAX(e.dataLancamento) DESC LIMIT 5")
+    List<Serie> findTop5ByOrderByEpisodiosDataLancamentoDesc();
 }

@@ -138,7 +138,7 @@ public class Principal {
                         buscarSerieWeb();
                         break;
                     case 2:
-                        buscarEpisodioPorSerie();
+                        //buscarEpisodioPorSerie();
                         break;
                     case 3:
                         listarSerieBuscada();
@@ -204,39 +204,39 @@ public class Principal {
         return dados;
     }
 
-    private void buscarEpisodioPorSerie() {
-        listarSerieBuscada();
-        System.out.println("Escolha uma série pelo nome: ");
-        var nomeSerie = leitura.nextLine();
-
-        Optional<Serie> serie = repositorio.findByTituloContainingIgnoreCase(nomeSerie);
-
-//        series.stream()
-//                .filter(s -> s.getTitulo().toLowerCase().contains(nomeSerie.toLowerCase()))
-//                .findFirst();
-
-        if (serie.isPresent()) {
-            var serieEncontrada = serie.get();
-            List<DadosTemporada> temporadas = new ArrayList<>();
-
-            for (int i = 1; i <= serieEncontrada.getTotalTemporadas(); i++) {
-                var json = consumo.obterDados(ENDERECO + serieEncontrada.getTitulo().replace(" ", "+") + "&season=" + i + API_KEY);
-                DadosTemporada dadosTemporada = conversor.obterDados(json, DadosTemporada.class);
-                temporadas.add(dadosTemporada);
-            }
-            temporadas.forEach(System.out::println);
-
-            List<Episodio> episodios = temporadas.stream()
-                    .flatMap(d -> d.episodios().stream()
-                            .map(e -> new Episodio(d.numero(), e)))
-                    .collect(Collectors.toList());
-
-            serieEncontrada.setEpisodios(episodios);
-            repositorio.save(serieEncontrada);
-        }else {
-            System.out.println("Série não encontrada!");
-        }
-    }
+//    private void buscarEpisodioPorSerie() {
+//        listarSerieBuscada();
+//        System.out.println("Escolha uma série pelo nome: ");
+//        var nomeSerie = leitura.nextLine();
+//
+//        repositorio.findByTituloContainingIgnoreCase(nomeSerie);
+//
+////        series.stream()
+////                .filter(s -> s.getTitulo().toLowerCase().contains(nomeSerie.toLowerCase()))
+////                .findFirst();
+//
+//        if (serie.isPresent()) {
+//            var serieEncontrada = serie.get();
+//            List<DadosTemporada> temporadas = new ArrayList<>();
+//
+//            for (int i = 1; i <= serieEncontrada.getTotalTemporadas(); i++) {
+//                var json = consumo.obterDados(ENDERECO + serieEncontrada.getTitulo().replace(" ", "+") + "&season=" + i + API_KEY);
+//                DadosTemporada dadosTemporada = conversor.obterDados(json, DadosTemporada.class);
+//                temporadas.add(dadosTemporada);
+//            }
+//            temporadas.forEach(System.out::println);
+//
+//            List<Episodio> episodios = temporadas.stream()
+//                    .flatMap(d -> d.episodios().stream()
+//                            .map(e -> new Episodio(d.numero(), e)))
+//                    .collect(Collectors.toList());
+//
+//            serieEncontrada.setEpisodios(episodios);
+//            repositorio.save(serieEncontrada);
+//        }else {
+//            System.out.println("Série não encontrada!");
+//        }
+//    }
 
     private void listarSerieBuscada(){
 //        List<Serie> series = new ArrayList<>();
@@ -263,7 +263,7 @@ public class Principal {
 //                );
 
          //Atualizando o codigo para um estrutura mais moderna, utilizando o ifPresentOrElse
-        serieBusca = repositorio.findByTituloContainingIgnoreCase(nomeSerie);
+        repositorio.findByTituloContainingIgnoreCase(nomeSerie);
         if (serieBusca.isPresent()){
             System.out.println("Dados da série: "+ serieBusca.get());
         }else{
@@ -276,11 +276,11 @@ public class Principal {
         var idSerie = leitura.nextInt();
 
 //         repositorio.findById(idSerie)
-            repositorio.buscarPorId(idSerie)
-                .ifPresentOrElse(
-                        serie -> System.out.println("Dados da série: " + serie),
-                        () -> System.out.println("Série não encontrada. ")
-                );
+//            repositorio.buscarPorId(idSerie)
+//                .ifPresentOrElse(
+//                        serie -> System.out.println("Dados da série: " + serie),
+//                        () -> System.out.println("Série não encontrada. ")
+//                );
 
 
 //         Atualizando o codigo para um estrutura mais moderna, utilizando o ifPresentOrElse
