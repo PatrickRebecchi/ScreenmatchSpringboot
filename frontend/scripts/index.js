@@ -1,0 +1,182 @@
+import getDados from "./getDados.js";
+
+// Mapeia os elementos DOM que você deseja atualizar
+const elementos = {
+    top5: document.querySelector('[data-name="top5"]'),
+    lancamentos: document.querySelector('[data-name="lancamentos"]'),
+    series: document.querySelector('[data-name="series"]')
+};
+
+// Função para criar a lista de filmes
+
+// Função para criar a lista de filmes
+function criarListaFilmes(elemento, dados) {
+    // Verifique se há um elemento <ul> dentro da seção
+    const ulExistente = elemento.querySelector('ul');
+
+    // Se um elemento <ul> já existe dentro da seção, remova-o
+    if (ulExistente) {
+        elemento.removeChild(ulExistente);
+    }
+
+    const ul = document.createElement('ul');
+    ul.className = 'lista';
+    const listaHTML = dados.map((filme) => `
+        <li>
+            <a href="/detalhes.html?id=${filme.id}">
+                <img src="${filme.poster}" alt="${filme.titulo}">
+            </a>
+        </li>
+    `).join('');
+
+    ul.innerHTML = listaHTML;
+    elemento.appendChild(ul);
+}
+
+// Função genérica para tratamento de erros
+function lidarComErro(mensagemErro) {
+    console.error(mensagemErro);
+}
+
+const categoriaSelect = document.querySelector('[data-categorias]');
+const sectionsParaOcultar = document.querySelectorAll('.section'); // Adicione a classe CSS 'hide-when-filtered' às seções e títulos que deseja ocultar.
+
+categoriaSelect.addEventListener('change', function () {
+    const categoria = document.querySelector('[data-name="categoria"]');
+    const categoriaSelecionada = categoriaSelect.value;
+
+    if (categoriaSelecionada === 'todos') {
+
+        for (const section of sectionsParaOcultar) {
+            section.classList.remove('hidden')
+        }
+        categoria.classList.add('hidden');
+
+    } else {
+
+        for (const section of sectionsParaOcultar) {
+            section.classList.add('hidden')
+        }
+
+        categoria.classList.remove('hidden')
+        // Faça uma solicitação para o endpoint com a categoria selecionada
+        getDados(`/series/categoria/${categoriaSelecionada}`)
+            .then(data => {
+                criarListaFilmes(categoria, data);
+            })
+            .catch(error => {
+                lidarComErro("Ocorreu um erro ao carregar os dados da categoria.");
+            });
+    }
+});
+
+// Array de URLs para as solicitações
+geraSeries();
+function geraSeries() {
+    const urls = ['/series/top5', '/series/lancamentos', '/series'];
+
+    // Faz todas as solicitações em paralelo
+    Promise.all(urls.map(url => getDados(url)))
+        .then(data => {
+            criarListaFilmes(elementos.top5, data[0]);
+            criarListaFilmes(elementos.lancamentos, data[1]);
+            criarListaFilmes(elementos.series, data[2]);
+        })
+        .catch(error => {
+            lidarComErro("Ocorreu um erro ao carregar os dados.");
+        });
+
+
+}
+
+// =========================
+// IMPORTAR SÉRIE (POST)
+// =========================
+
+async function adicionarSerie() {
+
+    const titulo = document.getElementById("tituloSerie").value;
+
+    if (!titulo) {
+        alert("Digite o nome da série");
+        return;
+    }
+
+    try {
+
+        const response = await fetch(
+            `http://localhost:8080/series/importar?titulo=${encodeURIComponent(titulo)}`,
+            { method: "POST" }
+        );
+
+        if (!response.ok) {
+            throw new Error("Erro ao importar série");
+        }
+
+        const data = await response.json();
+
+        document.getElementById("mensagem").innerText =
+            `Série "${data.titulo}" adicionada com sucesso!`;
+
+        // Atualiza a lista automaticamente
+        geraSeries();
+
+        // Limpa o campo
+        document.getElementById("tituloSerie").value = "";
+
+    } catch (error) {
+
+        document.getElementById("mensagem").innerText =
+            "Erro ao importar série.";
+
+        console.error(error);
+    }
+}
+
+document
+  .getElementById("btnImportar")
+  .addEventListener("click", adicionarSerie);
+
+  // =========================
+// BUSCAR SÉRIE POR NOME
+// =========================
+
+document
+  .getElementById("btnBuscar")
+  .addEventListener("click", buscarSerie);
+
+document
+  .getElementById("inputBusca")
+  .addEventListener("keydown", function(e) {
+      if (e.key === "Enter") {
+          buscarSerie();
+      }
+  });
+
+async function buscarSerie() {
+
+    const nome = document.getElementById("inputBusca").value;
+
+    if (!nome) return;
+
+    try {
+
+        const response = await fetch(
+            `http://localhost:8080/series/nome/${encodeURIComponent(nome)}`
+        );
+
+        const data = await response.json();
+
+        // Esconde seções principais
+        document.querySelectorAll('.section')
+            .forEach(sec => sec.classList.add('hidden'));
+
+        const categoria = document.querySelector('[data-name="categoria"]');
+        categoria.classList.remove('hidden');
+
+        criarListaFilmes(categoria, data);
+
+    } catch (error) {
+        console.error("Erro ao buscar série");
+    }
+}

@@ -1,0 +1,189 @@
+body {
+    background: linear-gradient(180.61deg,
+            #000000 25.16%,
+            #04254f 80%,
+            #409ecd 100%);
+    background-repeat: no-repeat;
+    background-size: cover;
+
+
+}
+
+h1 {
+    display: none;
+}
+
+.hidden {
+    display: none;
+}
+
+select,
+option {
+    background-color: black;
+    color: white;
+    font-size: 24px;
+    padding: 0 1em;
+}
+
+select {
+    border: none;
+    outline: none;
+}
+
+
+h2 {
+    color: white;
+}
+
+main {
+    padding: 0 3em;
+}
+
+.cabecalho {
+    display: flex;
+    justify-content: space-between;
+    padding: 1em 3em;
+}
+
+.cabecalho__logo {
+    display: flex;
+    gap: 1em;
+}
+
+.cabecalho__logo img {
+    width: 150px;
+    height: 50px;
+}
+
+.material-symbols-outlined {
+    color: white;
+    font-size: 48px
+}
+
+.lista {
+    list-style-type: none;
+    margin: 1em 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+
+    gap: 1em;
+}
+
+.lista li img {
+    width: 300px;
+    height: 444px;
+}
+
+.pesquisa {
+
+    min-height: 100vh;
+}
+
+@media screen and (max-width: 1600px) {
+    .lista {
+        overflow: hidden;
+        overflow-x: scroll;
+    }
+
+}
+
+/* ========================= */
+/* IMPORTAR SÉRIE ESTILIZADO */
+/* ========================= */
+
+.importar-wrapper {
+    display: flex;
+    justify-content: center;
+    margin: 40px 0;
+}
+
+.importar-card {
+    background: linear-gradient(145deg, #1c1c1c, #111);
+    padding: 30px;
+    border-radius: 16px;
+    width: 600px;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(0,0,0,0.6);
+    transition: 0.3s;
+}
+
+.importar-card:hover {
+    transform: translateY(-3px);
+}
+
+.importar-card h2 {
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+.importar-form {
+    display: flex;
+    gap: 10px;
+}
+
+.importar-form input {
+    flex: 1;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    font-size: 14px;
+    outline: none;
+}
+
+.importar-form input:focus {
+    box-shadow: 0 0 10px #e50914;
+}
+
+.importar-form button {
+    padding: 12px 20px;
+    border-radius: 8px;
+    border: none;
+    background-color: #e50914;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.importar-form button:hover {
+    background-color: #b00610;
+    transform: scale(1.05);
+}
+
+#mensagem {
+    margin-top: 15px;
+    font-size: 14px;
+    color: #4caf50;
+}
+
+/* ========================= */
+/* BUSCA NO HEADER */
+/* ========================= */
+
+.search-container {
+    display: flex;
+    align-items: center;
+    background-color: #1e1e1e;
+    padding: 6px 12px;
+    border-radius: 20px;
+    gap: 8px;
+    transition: 0.3s;
+}
+
+.search-container:hover {
+    background-color: #2a2a2a;
+}
+
+.search-container input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: white;
+    width: 150px;
+    font-size: 14px;
+}
+
+.search-container span {
+    cursor: pointer;
+    font-size: 20px;
+}
