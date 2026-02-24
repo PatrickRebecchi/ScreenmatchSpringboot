@@ -165,7 +165,7 @@ public class Principal {
                         buscarEpisodioPorTrecho();
                         break;
                     case 11:
-                        buscarTop5Episodios();
+                        //buscarTop5Episodios();
                         break;
                     case 12:
                         topEpisodioPorSerie();
@@ -360,14 +360,14 @@ public class Principal {
                         e.getNumeroEpisodio(), " Titulo: "+ e.getTitulo()));
     }
 
-    private void buscarTop5Episodios() {
-
-        List<Episodio> top5Episodios = repositorio.Top5Episodios(PageRequest.of(0,5));
-        System.out.println("                                  **********Top 5 Episódios**************");
-        top5Episodios.forEach(e -> System.out.printf("Série: %s  - Temporada %s - Episódio %s - Avaliação %s - %s\n",
-                e.getSerie().getTitulo(), e.getTemporada(),
-                e.getNumeroEpisodio(), e.getAvaliacao() ," Titulo: "+ e.getTitulo()));
-    }
+//    private void buscarTop5Episodios() {
+//
+//        List<Episodio> top5Episodios = repositorio.Top5Episodios();
+//        System.out.println("                                  **********Top 5 Episódios**************");
+//        top5Episodios.forEach(e -> System.out.printf("Série: %s  - Temporada %s - Episódio %s - Avaliação %s - %s\n",
+//                e.getSerie().getTitulo(), e.getTemporada(),
+//                e.getNumeroEpisodio(), e.getAvaliacao() ," Titulo: "+ e.getTitulo()));
+//    }
 
     private void topEpisodioPorSerie() {
         buscarSeriePorTitulo();

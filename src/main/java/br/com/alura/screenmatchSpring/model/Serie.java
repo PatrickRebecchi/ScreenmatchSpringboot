@@ -1,5 +1,6 @@
 package br.com.alura.screenmatchSpring.model;
 
+import br.com.alura.screenmatchSpring.dto.SerieDTO;
 import br.com.alura.screenmatchSpring.service.ConsultaChatGPT;
 import br.com.alura.screenmatchSpring.service.ConsultaGemini;
 import jakarta.persistence.*;
@@ -36,6 +37,15 @@ public class Serie {
         this.episodios = episodios;
     }
 
+    public Serie(SerieDTO dto) {
+        this.titulo = dto.titulo();
+        this.totalTemporadas = dto.totalTemporadas();
+        this.avaliacao = dto.avaliacao();
+        this.genero = dto.genero();
+        this.atores = dto.atores();
+        this.poster = dto.poster();
+        this.sinopse = dto.sinopse();
+    }
 
     public Long getId() {
         return id;
@@ -103,7 +113,9 @@ public class Serie {
     public Serie(DadosSerie dadosSerie){
         this.titulo = dadosSerie.titulo();
         this.totalTemporadas = dadosSerie.totalTemporadas();
-        this.avaliacao = OptionalDouble.of(Double.valueOf(dadosSerie.avaliacao())).orElse(0);
+        this.avaliacao = dadosSerie.avaliacao().equals("N/A")
+                ? 0.0
+                : Double.valueOf(dadosSerie.avaliacao());
         this.genero = Categoria.fromString(dadosSerie.genero().split(",")[0].trim());
         this.atores = dadosSerie.atores();
         this.poster = dadosSerie.poster();
