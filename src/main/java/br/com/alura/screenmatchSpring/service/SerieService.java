@@ -205,12 +205,11 @@ public class SerieService {
     }
 
     public void deletarSerie(long id) {
+
         if (!repository.existsById(id)) {
-            throw new RuntimeException("Série não encontrada");
+            throw new EntityNotFoundException("Série não encontrada");
         }
 
-
         repository.deleteById(id);
-        System.out.println("Série deleteda!!");
     }
 }

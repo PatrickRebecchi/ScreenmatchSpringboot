@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/series")
@@ -68,9 +69,11 @@ public class SerieController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable long id){
+    public ResponseEntity<Map<String, String>> deletar(@PathVariable long id){
         service.deletarSerie(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(
+                Map.of("mensagem", "Série deletada com sucesso")
+        );
     }
 
     // modo de usar o @PathVariable diferente
