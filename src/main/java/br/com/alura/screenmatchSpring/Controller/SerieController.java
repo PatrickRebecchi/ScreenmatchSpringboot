@@ -18,6 +18,11 @@ public class SerieController {
     @Autowired
     private SerieService service;
 
+    @GetMapping("/teste")
+    public String home() {
+        return "API Screenmatch está online 🚀";
+    }
+
     @GetMapping()
     public List<SerieDTO> obterSeries() {
         return service.obterTodasAsSeries();
