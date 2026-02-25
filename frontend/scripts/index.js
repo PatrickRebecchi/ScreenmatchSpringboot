@@ -104,10 +104,15 @@ async function adicionarSerie() {
 
     try {
 
+  //      const response = await fetch(
+    //        `http://localhost:8080/series/importar?titulo=${encodeURIComponent(titulo)}`,
+ //           { method: "POST" }
+//        );
+
         const response = await fetch(
-            `http://localhost:8080/series/importar?titulo=${encodeURIComponent(titulo)}`,
-            { method: "POST" }
-        );
+    `https://screenmatchspringboot.onrender.com/series/importar?titulo=${encodeURIComponent(titulo)}`,
+    { method: "POST" }
+);
 
         if (!response.ok) {
             throw new Error("Erro ao importar série");
@@ -162,12 +167,15 @@ async function buscarSerie() {
     try {
 
         const response = await fetch(
-            `http://localhost:8080/series/nome/${encodeURIComponent(nome)}`
+            `https://screenmatchspringboot.onrender.com/series/nome/${encodeURIComponent(nome)}`
         );
+
+        if (!response.ok) {
+            throw new Error("Erro na busca");
+        }
 
         const data = await response.json();
 
-        // Esconde seções principais
         document.querySelectorAll('.section')
             .forEach(sec => sec.classList.add('hidden'));
 
@@ -177,6 +185,6 @@ async function buscarSerie() {
         criarListaFilmes(categoria, data);
 
     } catch (error) {
-        console.error("Erro ao buscar série");
+        console.error("Erro ao buscar série", error);
     }
 }
